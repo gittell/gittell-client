@@ -1,4 +1,7 @@
 /*global chrome*/  
+
+var ActivityLog = require('./activity-log');
+
 var MIN_STAY_THRESHOLD = 5000;
 var ACTIVE_THRESHOLD = 30000;
 var lastActivity = null;
@@ -67,35 +70,16 @@ function accumulateActivity() {
     var url = lastActivity.url;
     if (isTargetSite(url)) {
       var duration = Date.now() - lastActivity.timestamp;
-      var activityLog = findActivityLog(url);
+      var activityLog = ActivityLog.findByUrl(url);
       if (!activityLog) {
         activityLog = { url: url, title: lastActivity.title, totalDuration: 0 };
       }
-      lastActivity.totalDuration += duration;
-      saveActivityLog(activityLog);
+      activityLog.title = lastActivity.title;
+      activityLog.totalDuration += duration;
+      console.log('Logging activity: total=', activityLog.totalDuration, ', delta=' + duration);
+      ActivityLog.save(activityLog);
     }
   }
-}
-
-function zeropad(n) {
-  return (n<10 ? "0" : "") + n;
-}
-
-function generateActivityLogKey(url) {
-  var d = new Date();
-  var today = "" + d.getFullYear() + zeropad(d.getMonth() + 1) + zeropad(d.getDate());
-  return 'activity_log_' + today + '_' + encodeURIComponent(url);
-}
-
-function findActivityLog(url) {
-  var key = generateActivityLogKey(url);
-  var s = localStorage.getItem(key);
-  return s && JSON.parse(s);
-}
-
-function saveActivityLog(activityLog) {
-  var key = generateActivityLogKey(activityLog.url);
-  localStorage.setItem(key, JSON.stringify(activityLog));
 }
 
 function isTargetSite(url) {
@@ -104,19 +88,4 @@ function isTargetSite(url) {
     if (regexp.test(url)) { return true; }
   }
   return false;
-}
-
-function printout() {
-  var urls = [];
-  var stayDurations = {};
-  for (var url in stayDurations) {
-    urls.push([ url, stayDurations[url] ]);
-  }
-  urls = urls.sort(function(u1, u2) {
-    return u1[1] > u2[1] ? 1 : u1[1] < u2[1] ? -1 : 0;
-  });
-  console.clear();
-  urls.forEach(function(url) {
-    console.log(url[0] + ": " + url[1]);
-  });
 }

@@ -18,7 +18,7 @@ module.exports = function(grunt) {
 
     watch: {
       scripts: {
-        files: [ "src/**/*.js" ],
+        files: [ "src/**" ],
         tasks: [ "build" ]
       }
     },
@@ -27,7 +27,16 @@ module.exports = function(grunt) {
       lib: {
         files: {
           'build/js/background.js': [ 'src/js/background.js' ],
-          'build/js/popup.js': [ 'src/js/popup.js' ]
+          'build/js/popup.js': [ 'src/js/popup.js' ],
+          'build/js/activity-observe.js': [ 'src/js/activity-observe.js' ]
+        }
+      }
+    },
+
+    less: {
+      dist: {
+        files: {
+          "build/css/popup.css": [ "src/less/popup.less" ]
         }
       }
     },
@@ -51,7 +60,7 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask('build', [ 'browserify', 'copy' ]);
+  grunt.registerTask('build', [ 'less', 'browserify', 'copy' ]);
   grunt.registerTask('default', ['build']);
 
 };

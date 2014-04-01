@@ -1,0 +1,40 @@
+body {
+  margin: 0 auto;
+  padding: 8px;
+  font-size: 12px;
+  table tbody, table thead {
+    font-size: 12px;
+  }
+}
+#activity-logs {
+  width: 480px;
+}
+table.activity-logs {
+  width: 100%;
+  th.duration {
+    width: 90px;
+  }
+  td.duration {
+    position: relative;
+    font-size: 10px;
+    .indicator {
+      position: absolute;
+      width: 0;
+      height: 20px;
+      &.green  {
+        background-color: #3EC63E;
+      }
+      &.yellow {
+        background-color: #ffff00;
+      }
+      &.red {
+        background-color: #ff0000;
+      }
+    }
+    .label {
+      position: absolute;
+      height: 20px;
+      width: 100%;
+    }
+  }
+}

@@ -1,20 +1,30 @@
-<style>
-body {
-  min-width:357px;
-  min-height:357px;
-  overflow-x:hidden;
-}
-
-img {
-  margin:5px;
-  border:2px solid black;
-  vertical-align:middle;
-  width:75px;
-  height:75px;
-}
-</style>
-
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0/jquery.min.js"></script>
+<link rel="stylesheet" href="css/popup.css">
 <script type="text/javascript" src="js/popup.js"></script>
-
-<div id="activity-logs"></div>
+<div id="activity-logs">
+  <table class="activity-logs">
+    <thead>
+      <tr>
+        <th class="title">Title</th>
+        <th class="duration">Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-repeat="logs" class="{{ $index }}">
+        <td class="title">
+          <a target="_blank" href="{{ url }}">{{ title }}</a>
+        </td>
+        <td class="duration">
+          <div style="{{ totalDuration | secondIndicator | toStyleProperty width %}}" class="indicator green">
+            <div style="{{ totalDuration | minuteIndicator | toStyleProperty width %}}" class="indicator yellow">
+              <div style="{{ totalDuration | hourIndicator | toStyleProperty width %}}" class="indicator red">
+              </div>
+            </div>
+          </div>
+          <div class="label">
+          {{ totalDuration | formatDuration }}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -6,7 +6,6 @@ function attachObserver() {
 }
 
 function notifyActive() {
-  console.log('notify active');
   window.removeEventListener("mousemove", notifyActive, false);
   window.removeEventListener("keydown", notifyActive, false);
   window.removeEventListener("scroll", notifyActive, false);

@@ -23,12 +23,28 @@ module.exports = function(grunt) {
       }
     },
 
+    copy: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: 'src/',
+          src: [ '**' ],
+          dest: 'build/'
+        }, {
+          expand: true,
+          cwd: 'assets/',
+          src: [ 'vendor/*/dist/**' ],
+          dest: 'build/assets'
+        }]
+      }
+    },
+
     browserify: {
       lib: {
         files: {
-          'build/js/background.js': [ 'src/js/background.js' ],
-          'build/js/popup.js': [ 'src/js/popup.js' ],
-          'build/js/activity-observe.js': [ 'src/js/activity-observe.js' ]
+          'build/js/background-main.js': [ 'build/js/background.js' ],
+          'build/js/popup-main.js': [ 'build/js/popup.js' ],
+          'build/js/observe-main.js': [ 'build/js/observe.js' ]
         }
       }
     },
@@ -41,22 +57,6 @@ module.exports = function(grunt) {
       }
     },
 
-    copy: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: 'src/',
-          src: [ '*.json', '*.html', 'images/**', 'assets/**' ],
-          dest: 'build/'
-        }, {
-          expand: true,
-          cwd: 'assets/',
-          src: [ 'vendor/*/dist/**' ],
-          dest: 'build/assets'
-        }]
-      }
-    },
-
     clean: {
       lib: {
         src: [ "build/*" ]
@@ -65,7 +65,7 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask('build', [ 'less', 'browserify', 'copy' ]);
+  grunt.registerTask('build', [ 'copy', 'less', 'browserify' ]);
   grunt.registerTask('default', ['build']);
 
 };

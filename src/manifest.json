@@ -1,5 +1,5 @@
 {
-  "name": "Meetell",
+  "name": "meetell",
   "version": "0.0.1",
   "description": "Broadcast what you are seeing in tech repository / questions",
   "manifest_version": 2,
@@ -10,17 +10,16 @@
   },
   "background": {
     "persistent": false,
-    "scripts": [ "js/background.js" ]
+    "scripts": [ "js/background-main.js" ]
   },
   "content_scripts": [{
     "matches": [ "http://*/*", "https://*/*" ],
-    "js": [ "js/activity-observe.js" ]
+    "js": [ "js/observe-main.js" ]
   }],
   "options_page": "options.html",
   "permissions": [
     "tabs",
-    "alarms",
-    "history"
+    "alarms"
   ],
   "plugins": []
 }

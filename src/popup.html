@@ -1,7 +1,10 @@
+<link rel="stylesheet" href="assets/vendor/bootstrap/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="css/popup.css">
+<script type="text/javascript" src="assets/vendor/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="assets/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/popup.js"></script>
 <div id="activity-logs">
-  <table class="activity-logs">
+  <table class="table table-hover table-striped activity-logs">
     <thead>
       <tr>
         <th class="title">Title</th>
@@ -20,7 +23,7 @@
               </div>
             </div>
           </div>
-          <div class="label">
+          <div class="value">
           {{ totalDuration | formatDuration }}
           </div>
         </td>

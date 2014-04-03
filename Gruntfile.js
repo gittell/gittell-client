@@ -17,9 +17,13 @@ module.exports = function(grunt) {
     pkg: pkg,
 
     watch: {
-      scripts: {
+      lib: {
         files: [ "src/**" ],
         tasks: [ "build" ]
+      },
+      test: {
+        files: [ "test/*.test.js" ],
+        tasks: [ "test" ]
       }
     },
 
@@ -46,9 +50,30 @@ module.exports = function(grunt) {
           'build/js/popup-main.js': [ 'build/js/popup.js' ],
           'build/js/observe-main.js': [ 'build/js/observe.js' ]
         }
+      },
+      test: {
+        files: [{
+          expand: true,
+          cwd: 'test/',
+          src: [
+            '**/*.test.js', '!browser/**'
+          ],
+          dest: 'test/browser/'
+        }]
       }
     },
 
+    espower: {
+      test: {
+        files: [{
+          expand: true,
+          cwd: 'test/',
+          src: [ '**/*.js' ],
+          dest: 'test-powered/'
+        }]
+      },
+    },
+  
     less: {
       dist: {
         files: {
@@ -60,12 +85,16 @@ module.exports = function(grunt) {
     clean: {
       lib: {
         src: [ "build/*" ]
+      },
+      test: {
+        src: [ "test/browser/**", "test-powered/**" ]
       }
     }
 
   });
 
-  grunt.registerTask('build', [ 'copy', 'less', 'browserify' ]);
-  grunt.registerTask('default', ['build']);
+  grunt.registerTask('test', [ 'browserify:test', 'espower' ]);
+  grunt.registerTask('build', [ 'copy', 'less', 'browserify:lib' ]);
+  grunt.registerTask('default', [ 'build' ]);
 
 };

@@ -1,0 +1,22 @@
+{
+  "framework": "mocha",
+  "before_tests": "grunt test",
+  "src_files": [
+    "src/**/*.js",
+    "test/**/*.test.js"
+  ],
+  "watch_files": [
+    "src/**/*.js",
+    "test/**/*.test.js"
+  ],
+  "serve_files": [
+    "test-powered/browser/**/*.test.js"
+  ],
+  "launch_in_ci": [ "node" ],
+  "launch_in_dev": [ "node", "phantomjs" ],
+  "launchers": {
+    "node": {
+      "command": "npm test"
+    }
+  }
+}

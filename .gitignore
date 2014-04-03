@@ -28,3 +28,6 @@ node_modules
 
 # Extension build result
 /build
+
+# empower generated files
+/test-powered

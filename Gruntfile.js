@@ -37,7 +37,10 @@ module.exports = function(grunt) {
         }, {
           expand: true,
           cwd: 'assets/',
-          src: [ 'vendor/*/dist/**' ],
+          src: [
+            'vendor/angular*/**',
+            'vendor/bootstrap/dist/**'
+          ],
           dest: 'build/assets'
         }]
       }

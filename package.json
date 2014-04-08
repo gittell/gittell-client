@@ -17,7 +17,6 @@
     "test": "mocha ./test-powered/*.test.js -R tap"
   },
   "dependencies": {
-    "vue": "^0.10.3",
     "underscore": "^1.6.0"
   }
 }

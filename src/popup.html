@@ -1,33 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
 <link rel="stylesheet" href="assets/vendor/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/vendor/angular/angular-csp.css">
 <link rel="stylesheet" href="css/popup.css">
-<script type="text/javascript" src="assets/vendor/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript" src="assets/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="assets/vendor/angular/angular.min.js"></script>
+<script type="text/javascript" src="assets/vendor/angular-bootstrap/ui-bootstrap.min.js"></script>
+<script type="text/javascript" src="assets/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script type="text/javascript" src="js/popup-main.js"></script>
-<div id="activity-logs">
-  <table class="table table-hover table-striped activity-logs">
-    <thead>
-      <tr>
-        <th class="title">Title</th>
-        <th class="duration">Duration</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-repeat="logs" class="{{ $index }}">
-        <td class="title">
-          <a target="_blank" href="{{ url }}">{{ title }}</a>
-        </td>
-        <td class="duration">
-          <div style="{{ totalDuration | secondIndicator | toStyleProperty width %}}" class="indicator green">
-            <div style="{{ totalDuration | minuteIndicator | toStyleProperty width %}}" class="indicator yellow">
-              <div style="{{ totalDuration | hourIndicator | toStyleProperty width %}}" class="indicator red">
-              </div>
-            </div>
-          </div>
-          <div class="value">
-          {{ totalDuration | formatDuration }}
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+</head>
+<body ng-app="popup" ng-csp>
+  <div id="activity-logs" ng-controller="ActivityLogController">
+    <div class="date-control">
+      <a class="btn prev-date" ng-click="addTargetDate(-1)">
+        &laquo; {{ targetDate - 24*60*60*1000 | date:'mediumDate' }}
+      </a>
+      <span class="current-date">{{ targetDate | date:'mediumDate' }}</span>
+      <a class="btn next-date" ng-click="addTargetDate(1)" ng-disabled="targetDate >= now">
+        {{ targetDate + 24*60*60*1000 | date:'mediumDate' }} &raquo;
+      </a>
+    </div>
+    <div class="activity-table-wrapper">
+      <table class="table table-hover table-striped activity-logs"
+             ng-show="groups.length > 0">
+        <thead>
+          <tr>
+            <th class="check"></th>
+            <th class="title">Title</th>
+            <th class="duration">Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="group in groups">
+            <td colspan="3" class="group-set">
+              <table class="group">
+                <tbody>
+                  <tr class="page" ng-show="group.logs.length > 1">
+                    <td class="check">
+                      <a href="#"
+                         ng-click="group.opening = !group.opening">
+                        <span ng-show="group.opening">[-]</span>
+                        <span ng-show="!group.opening">[+]</span>
+                      </a>
+                    </td>
+                    <td class="title">
+                      <div class="title">
+                        <img class="site-icon" ng-src="{{ group.page.site.icon }}">
+                        <a href="{{ group.page.url }}"
+                           title="{{ group.page.title }}">{{ group.page.title }}</a>
+                      </div>
+                    </td>
+                    <td class="duration">
+                      <div class="indicator-wrapper">
+                        <div style="width: {{ group.totalDuration | secondIndicator }}%" class="indicator green">
+                          <div style="width: {{ group.totalDuration | minuteIndicator }}%" class="indicator yellow">
+                            <div style="width: {{ group.totalDuration | hourIndicator }}%" class="indicator red">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="value">
+                      {{ group.totalDuration | formatDuration }}
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="page" ng-show="group.opening || group.logs.length === 1" ng-repeat="log in group.logs">
+                    <td class="check">
+                    </td>
+                    <td class="title">
+                      <div class="title">
+                        <img class="site-icon" ng-src="{{ log.page.site.icon }}">
+                        <a target="_blank" href="{{ log.page.url }}"
+                           title="{{ log.page.title }}">{{ log.page.title }}</a>
+                      </div>
+                    </td>
+                    <td class="duration">
+                      <div class="indicator-wrapper">
+                        <div style="width: {{ log.totalDuration | secondIndicator }}%" class="indicator green">
+                          <div style="width: {{ log.totalDuration | minuteIndicator }}%" class="indicator yellow">
+                            <div style="width: {{ log.totalDuration | hourIndicator }}%" class="indicator red">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="value">
+                      {{ log.totalDuration | formatDuration }}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="no-rows-message" ng-show="groups.length === 0">
+        No access logs found for the date.
+      </div>
+    </div>
+  </div>
 </div>
+</body>
+</html>

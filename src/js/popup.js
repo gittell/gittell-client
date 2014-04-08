@@ -1,5 +1,19 @@
-var Vue = require('vue');
+/*global angular*/
+
 var ActivityLog = require('./activity-log');
+
+var app = angular.module('popup', ['ui.bootstrap'])
+  .controller('ActivityLogController', ['$scope', function($scope) {
+    $scope.addTargetDate = function(diff) {
+      $scope.targetDate += diff * 24 * 60 * 60 * 1000;
+      $scope.fetchGroups();
+    };
+    $scope.fetchGroups = function() {
+      $scope.groups = ActivityLog.listLogGroups({ date: $scope.targetDate }, 'totalDuration');
+    };
+    $scope.targetDate = $scope.now = Date.now();
+    $scope.fetchGroups();
+  }]);
 
 var filters = {
   formatDuration: function(ms) {
@@ -36,26 +50,12 @@ var filters = {
   hourIndicator: function(ms) {
     var h = ms/(60 * 60 * 1000);
     return h > 24 ? 100 : Math.floor(100*h/24);
-  },
-
-  toStyleProperty: function(value, key, unit) {
-    return key + ":" + value + (unit || "");
   }
+
 };
 
-for (var fname in filters) {
-  Vue.filter(fname, filters[fname]);
-}
-
-document.addEventListener('DOMContentLoaded', init);
-
-function init() {
-  var logs = ActivityLog.find({}, 'totalDuration');
-  var vm = new Vue({
-    el: '#activity-logs',
-    data: {
-      logs: logs
-    }
+Object.keys(filters).forEach(function(fname) {
+  app.filter(fname, function() {
+    return filters[fname];
   });
-}
-
+});

@@ -68,6 +68,7 @@ function storeActivity(callback) {
         activityLog = { totalDuration: 0, page: lastAccess.page };
       }
       var duration = Date.now() - lastAccess.timestamp;
+      duration = ACTIVE_THRESHOLD > duration ? duration : ACTIVE_THRESHOLD;
       activityLog.totalDuration += duration;
       console.log('Logging activity: url=' + activityLog.page.url + ', total=', activityLog.totalDuration, ', delta=' + duration);
       ActivityLog.save(activityLog);

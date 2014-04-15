@@ -65,15 +65,15 @@ Site.find = function(params, callback) {
     mapping: {
       url: {
         regexp: "^https?://github.com/[\\w\\-\\.]+/[\\w\\-\\.]+(/[\\w\\-\\.]+)*",
-        excludes: "^https?://github.com/(about|login|orgs|organizations|dashboard|settings|showcases|blog|)/"
+        excludes: "^https?://github.com/(about|login|orgs|organizations|dashboard|search|settings|showcases|blog)/"
       },
       projectUrl: {
         from: "url",
         regexp: "^https?://github.com/([\\w\\-\\.]+/[\\w\\-\\.]+)"
       },
       projectTitle: {
-        from: "title",
-        regexp: "\\s*([\\w\\-\\.]+/[\\w\\-\\.]+)$",
+        from: "url",
+        regexp: "^https?://github.com/([\\w\\-\\.]+/[\\w\\-\\.]+)",
         index: 1
       },
       authorId: {

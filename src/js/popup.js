@@ -1,15 +1,19 @@
 /*global angular*/
 
-var ActivityLog = require('./activity-log');
+var ActivityLog = require('./model/activity-log');
 
-var app = angular.module('popup', ['ui.bootstrap'])
-  .controller('ActivityLogController', ['$scope', function($scope) {
+var app = angular.module('popup', [ 'ui.bootstrap' ])
+  .controller('ActivityLogController', [ '$scope', function($scope) {
     $scope.addTargetDate = function(diff) {
       $scope.targetDate += diff * 24 * 60 * 60 * 1000;
       $scope.fetchGroups();
     };
     $scope.fetchGroups = function() {
-      $scope.groups = ActivityLog.listLogGroups({ date: $scope.targetDate }, 'totalDuration');
+      ActivityLog.listLogGroups({ date: $scope.targetDate }, 'totalDuration', function(err, groups) {
+        $scope.loading = false;
+        $scope.groups = groups;
+      });
+      $scope.loading = true;
     };
     $scope.targetDate = $scope.now = Date.now();
     $scope.fetchGroups();

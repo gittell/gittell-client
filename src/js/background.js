@@ -1,8 +1,8 @@
 /*global chrome*/  
 var _ = require('underscore');
 
-var ActivityLog = require('./activity-log');
-var Site = require('./site');
+var ActivityLog = require('./model/activity-log');
+var Site = require('./model/site');
 
 var MIN_STAY_THRESHOLD = 5000;
 var ACTIVE_THRESHOLD = 30000;
@@ -59,20 +59,26 @@ function setLastAccess(page) {
 
 function storeActivity(callback) {
   if (lastAccess) {
-    var url = lastAccess.page.url;
+    var page = lastAccess.page;
+    var url = page.url;
     Site.findByUrl(url, function(err, site) {
       if (err) { return callback(err); }
-      var activityLog = ActivityLog.findByUrl(url);
-      if (!activityLog) {
-        console.log('activity log not found. create new:');
-        activityLog = { totalDuration: 0, page: lastAccess.page };
-      }
-      var duration = Date.now() - lastAccess.timestamp;
-      duration = ACTIVE_THRESHOLD > duration ? duration : ACTIVE_THRESHOLD;
-      activityLog.totalDuration += duration;
-      console.log('Logging activity: url=' + activityLog.page.url + ', total=', activityLog.totalDuration, ', delta=' + duration);
-      ActivityLog.save(activityLog);
-      callback();
+      ActivityLog.findByUrl(url, function(err, activityLog) {
+        console.log(activityLog);
+        var now = Date.now();
+        if (!activityLog) {
+          console.log('activity log not found. create new:');
+          activityLog = { totalDuration: 0, startAt: now };
+        }
+        var duration = now - lastAccess.timestamp;
+        duration = ACTIVE_THRESHOLD > duration ? duration : ACTIVE_THRESHOLD;
+        activityLog.totalDuration += duration;
+        activityLog.page = page;
+        console.log('Logging activity: url=' + activityLog.page.url + ', title=' + activityLog.page.title + 
+          ', total=', activityLog.totalDuration, ', delta=' + duration);
+        ActivityLog.save(activityLog);
+        callback();
+      });
     });
   }
 }

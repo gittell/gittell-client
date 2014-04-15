@@ -1,5 +1,5 @@
-/*global chrome*/
-var Site = require('./site');
+/* global chrome */
+var Site = require('./model/site');
 
 function attachObserver() {
   window.addEventListener("load", notifyActivePageInInterval, false);

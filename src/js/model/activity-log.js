@@ -25,19 +25,13 @@ function generateActivityLogKey(url) {
   return 'activity_log_' + getToday() + '_' + encodeURIComponent(url);
 }
 
-function findByUrl(url) {
-  var key = generateActivityLogKey(url);
-  var s = localStorage.getItem(key);
-  return s && JSON.parse(s);
-}
-
 function save(activityLog) {
   var key = generateActivityLogKey(activityLog.page.url);
   activityLog.date = getToday();
   localStorage.setItem(key, JSON.stringify(activityLog));
 }
 
-function find(conditions, sort) {
+function find(conditions, sort, callback) {
   conditions = conditions || {};
   conditions.date = conditions.date ? toISO8601Date(conditions.date) : getToday();
   var logs = [];
@@ -57,39 +51,46 @@ function find(conditions, sort) {
              l1.totalDuration > l2.totalDuration ? -1 : 0;
     });
   }
-  return logs;
+  callback(null, logs);
 }
 
-function listLogGroups(conditions, sort) {
-  var logs = find(conditions, sort);
-  var groups = {};
-  logs.forEach(function(log) {
-    log.page.site = sites[log.page.siteId];
-    var groupUrl = log.page.projectUrl || log.page.url;
-    var group = groups[groupUrl] || 
-      (groups[groupUrl] = { totalDuration : 0, logs: [] });
-    group.page = {
-      site: log.page.site,
-      url: groupUrl,
-      title: log.page.projectTitle || log.page.title
-    };
-    group.totalDuration += log.totalDuration;
-    group.logs.push(log);
-  });
-  groups = _.values(groups);
-  if (sort && sort === 'totalDuration') {
-    groups = groups.sort(function (g1, g2) {
-      return g1.totalDuration < g2.totalDuration ? 1 :
-             g1.totalDuration > g2.totalDuration ? -1 : 0;
+function findByUrl(url, callback) {
+  var key = generateActivityLogKey(url);
+  var s = localStorage.getItem(key);
+  callback(null, s && JSON.parse(s));
+}
+
+function listLogGroups(conditions, sort, callback) {
+  find(conditions, sort, function(err, logs) {
+    var groups = {};
+    logs.forEach(function(log) {
+      log.page.site = sites[log.page.siteId];
+      var groupUrl = log.page.projectUrl || log.page.url;
+      var group = groups[groupUrl] || 
+        (groups[groupUrl] = { totalDuration : 0, logs: [] });
+      group.page = {
+        site: log.page.site,
+        url: groupUrl,
+        title: log.page.projectTitle || log.page.title
+      };
+      group.totalDuration += log.totalDuration;
+      group.logs.push(log);
     });
-  } 
-  return groups;
+    groups = _.values(groups);
+    if (sort && sort === 'totalDuration') {
+      groups = groups.sort(function (g1, g2) {
+        return g1.totalDuration < g2.totalDuration ? 1 :
+               g1.totalDuration > g2.totalDuration ? -1 : 0;
+      });
+    } 
+    callback(null, groups);
+  });
 }
 
 module.exports = {
   save: save,
-  findByUrl: findByUrl,
   find: find,
+  findByUrl: findByUrl,
   listLogGroups: listLogGroups
 };
 

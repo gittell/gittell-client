@@ -9,8 +9,17 @@
 <script type="text/javascript" src="assets/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script type="text/javascript" src="js/options-main.js"></script>
 </head>
-<body ng-app="options" ng-csp>
-  <h1>Options</h1>
-
+<body ng-app="app.options" ng-csp>
+  <div id="login" ng-controller="LoginController">
+    <div class="alert alert-info" ng-show="isLoading">Loading...</div>
+    <h2>Options</h2>
+    Access Token: {{ accessToken }}
+    <div ng-show="!isLoggedIn">
+      <button class="btn btn-primary" ng-click="login(true)">Login</button>
+    </div>
+    <div ng-show="isLoggedIn">
+      <button class="btn btn-warning" ng-click="logout()">Logout</button>
+    </div>
+  </div>
 </body>
 </html>

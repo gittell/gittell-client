@@ -19,7 +19,8 @@
   "options_page": "options.html",
   "permissions": [
     "tabs",
-    "alarms"
+    "alarms",
+    "identity"
   ],
   "plugins": []
 }

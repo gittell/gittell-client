@@ -17,6 +17,7 @@
     "test": "mocha ./test-powered/*.test.js -R tap"
   },
   "dependencies": {
-    "underscore": "^1.6.0"
+    "underscore": "^1.6.0",
+    "browser-request": "^0.3.1"
   }
 }

@@ -68,7 +68,7 @@ function storeActivity(callback) {
         var now = Date.now();
         if (!activityLog) {
           console.log('activity log not found. create new:');
-          activityLog = { totalDuration: 0, startAt: now };
+          activityLog = { totalDuration: 0, since: now };
         }
         var duration = now - lastAccess.timestamp;
         duration = ACTIVE_THRESHOLD > duration ? duration : ACTIVE_THRESHOLD;

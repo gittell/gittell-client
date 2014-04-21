@@ -51,6 +51,7 @@ module.exports = function(grunt) {
         files: {
           'build/js/background-main.js': [ 'build/js/background.js' ],
           'build/js/popup-main.js': [ 'build/js/popup.js' ],
+          'build/js/options-main.js': [ 'build/js/options.js' ],
           'build/js/observe-main.js': [ 'build/js/observe.js' ]
         }
       },

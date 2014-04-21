@@ -2932,15 +2932,15 @@ Site.find = function(params, callback) {
     mapping: {
       url: {
         regexp: "^https?://github.com/[\\w\\-\\.]+/[\\w\\-\\.]+(/[\\w\\-\\.]+)*",
-        excludes: "^https?://github.com/(about|login|orgs|organizations|dashboard|settings|showcases|blog|)/"
+        excludes: "^https?://github.com/(about|login|orgs|organizations|dashboard|search|settings|showcases|blog)/"
       },
       projectUrl: {
         from: "url",
         regexp: "^https?://github.com/([\\w\\-\\.]+/[\\w\\-\\.]+)"
       },
       projectTitle: {
-        from: "title",
-        regexp: "\\s*([\\w\\-\\.]+/[\\w\\-\\.]+)$",
+        from: "url",
+        regexp: "^https?://github.com/([\\w\\-\\.]+/[\\w\\-\\.]+)",
         index: 1
       },
       authorId: {
@@ -2977,7 +2977,7 @@ Site.findByUrl = function(url, callback) {
 var assert = require("power-assert");
 var _ = require("underscore");
 
-var Site = require("../src/js/site");
+var Site = require("../src/js/models/site");
 
 describe("site", function() {
   it("should find sites", function(done) {
@@ -3115,4 +3115,4 @@ describe("site", function() {
 
 
 });
-},{"../src/js/site":10,"power-assert":6,"underscore":9}]},{},[11]);
+},{"../src/js/models/site":10,"power-assert":6,"underscore":9}]},{},[11]);

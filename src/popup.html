@@ -5,11 +5,12 @@
 <link rel="stylesheet" href="assets/vendor/angular/angular-csp.css">
 <link rel="stylesheet" href="css/popup.css">
 <script type="text/javascript" src="assets/vendor/angular/angular.min.js"></script>
+<script type="text/javascript" src="assets/vendor/angular-resource/angular-resource.min.js"></script>
 <script type="text/javascript" src="assets/vendor/angular-bootstrap/ui-bootstrap.min.js"></script>
 <script type="text/javascript" src="assets/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script type="text/javascript" src="js/popup-main.js"></script>
 </head>
-<body ng-app="popup" ng-csp>
+<body ng-app="app.popup" ng-csp>
   <div id="activity-logs" ng-controller="ActivityLogController">
     <div class="date-control">
       <a class="btn prev-date" ng-click="addTargetDate(-1)">

@@ -2,7 +2,7 @@
 var assert = require("power-assert");
 var _ = require("underscore");
 
-var Site = require("../src/js/site");
+var Site = require("../src/js/models/site");
 
 describe("site", function() {
   it("should find sites", function(done) {

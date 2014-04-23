@@ -1,15 +1,17 @@
 /* global chrome */
 var querystring = require('querystring');
+var config = require('../config');
+var AccessToken = require('../models/access-token');
 
-module.exports = ['$scope', 'AuthToken', 'AppConfig', function($scope, AuthToken, AppConfig) {
-  $scope.accessToken = AuthToken.get();
+module.exports = ['$scope', function($scope) {
+  $scope.accessToken = AccessToken.get();
   $scope.isLoggedIn = !!$scope.accessToken;
   $scope.login = function(interactive) {
     console.log("start login");
     $scope.isLoading = true;
     var redirectUri = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
     var state = Math.random().toString(36).substring(2);
-    var authzUrl = AppConfig.client.authzUrl + "?" + querystring.stringify({
+    var authzUrl = config.client.authzUrl + "?" + querystring.stringify({
       client_id: "chromeExtension",
       response_type: "token",
       redirect_uri: redirectUri,
@@ -32,12 +34,12 @@ module.exports = ['$scope', 'AuthToken', 'AppConfig', function($scope, AuthToken
       }
       $scope.accessToken = hashParams.access_token;
       $scope.isLoggedIn = true;
-      AuthToken.set($scope.accessToken);
+      AccessToken.set($scope.accessToken);
       $scope.$apply();
     });
   };
   $scope.logout = function() {
-    AuthToken.set(null);
+    AccessToken.set(null);
     $scope.accessToken = null;
     $scope.isLoggedIn = false;
   };

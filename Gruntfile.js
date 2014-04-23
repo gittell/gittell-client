@@ -39,6 +39,7 @@ module.exports = function(grunt) {
           cwd: 'assets/',
           src: [
             'vendor/angular*/**',
+            'vendor/font-awesome/**',
             'vendor/bootstrap/dist/**'
           ],
           dest: 'build/assets'

@@ -1,9 +1,6 @@
-/*global angular*/
+/* global angular */
 
-module.exports = angular.module('app.popup', [
-  'ui.bootstrap',
-  require('./services').name
-])
+module.exports = angular.module('app.popup', [ 'ui.bootstrap' ])
   .config(require('./filters'))
-  .controller('ActivityLogController', require('./controllers/activity-log'));
+  .controller('ActivityController', require('./controllers/activity'));
 

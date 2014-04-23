@@ -1,5 +1,4 @@
-/*global angular, chrome */
-module.exports = angular.module('app.options', [
-  'ui.bootstrap',
-  require('./services').name
-]).controller('LoginController', require('./controllers/login'));
+/*global angular */
+
+module.exports = angular.module('app.options', ['ui.bootstrap'])
+  .controller('LoginController', require('./controllers/login'));

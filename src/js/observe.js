@@ -1,6 +1,4 @@
 /* global chrome */
-var Site = require('./models/site');
-
 function attachObserver() {
   window.addEventListener("load", notifyActivePageInInterval, false);
   window.addEventListener("mousemove", notifyActivePageInInterval, false);
@@ -18,17 +16,12 @@ function notifyActivePageInInterval() {
 }
 
 function notifyActivePageToBackground() {
-  Site.findByUrl(location.href, function(err, site) {
-    var activePage = null;
-    if (site) {
-      activePage = site.canonicalize({
-        url: location.href,
-        title: document.title,
-        document: document
-      });
-    }
-    chrome.runtime.sendMessage({ activePage: activePage });
-  });
+  var canoLink = document.querySelector('link[rel=canonical]');
+  var activePage = {
+    url: (canoLink || location).href,
+    title: document.title
+  };
+  chrome.runtime.sendMessage({ activePage: activePage });
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender) {

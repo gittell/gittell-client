@@ -6,10 +6,34 @@ body {
     font-size: 12px;
   }
 }
-#activity-logs {
+
+@-webkit-keyframes spin {
+  0%   { -webkit-transform: rotate(0deg) }
+  100% { -webkit-transform: rotate(360deg) }
+}
+#loading {
+  position: absolute;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.5);
+  top: 0;
+  left: 0;
   width: 480px;
   height: 400px;
-
+  .indicator {
+    position: absolute;
+    font-size: 32px;
+    top: 50%;
+    left: 50%;
+    width: 32px;
+    height: 32px;
+    margin-left: -16px;
+    margin-top: -16px;
+    -webkit-animation: spin 1s infinite linear;
+  }
+}
+#activities {
+  width: 480px;
+  height: 400px;
 }
 div.no-rows-message {
   text-align: center;
@@ -35,7 +59,7 @@ div.date-control {
   height: 400px;
   overflow: auto;
 }
-table.activity-logs {
+table.activities {
   width: 100%;
 
   th.check, td.check {

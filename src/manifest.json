@@ -20,7 +20,9 @@
   "permissions": [
     "tabs",
     "alarms",
-    "identity"
+    "identity",
+    "http://localhost:5000/",
+    "https://meetell-server.herokuapp.com/"
   ],
   "plugins": []
 }

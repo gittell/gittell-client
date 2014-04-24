@@ -65,6 +65,17 @@ module.exports = function(grunt) {
           ],
           dest: 'test/browser/'
         }]
+      },
+      options: {
+        transform: [
+          [
+            'envify',
+            {
+              API_SERVER_URL: 'https://meetell-server.herokuapp.com',
+              AUTHZ_SERVER_URL: 'https://meetell-server.herokuapp.com'
+            }
+          ]
+        ]
       }
     },
 

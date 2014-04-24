@@ -1,7 +1,8 @@
+/* global process */
 module.exports = {
-  apiBaseUrl: "http://localhost:5000/api",
+  apiBaseUrl: process.env.API_SERVER_URL + "/api",
   client: {
     clientId: "chromeExtension",
-    authzUrl: "http://localhost:5000/oauth2/authorize"
+    authzUrl: process.env.AUTHZ_SERVER_URL + "/oauth2/authorize"
   }
 };

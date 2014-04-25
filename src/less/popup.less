@@ -11,6 +11,22 @@ body {
   0%   { -webkit-transform: rotate(0deg) }
   100% { -webkit-transform: rotate(360deg) }
 }
+#root {
+  width: 480px;
+  height: 400px;
+}
+#header {
+  min-height: 40px;
+  .logo {
+    padding: 10px !important;
+    height: 40px;
+    background-image: url(./images/logo.png);
+  }
+  .user-icon {
+    width: 24px;
+    height: 24px;
+  }
+}
 #loading {
   position: absolute;
   z-index: 1;
@@ -31,9 +47,12 @@ body {
     -webkit-animation: spin 1s infinite linear;
   }
 }
+#login-prompt {
+  text-align: center;
+  padding-top: 120px;
+}
 #activities {
-  width: 480px;
-  height: 400px;
+
 }
 div.no-rows-message {
   text-align: center;

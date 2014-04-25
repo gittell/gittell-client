@@ -10,99 +10,14 @@
 <script type="text/javascript" src="assets/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script type="text/javascript" src="js/popup-main.js"></script>
 </head>
-<body ng-app="app.popup" ng-csp>
-  <div id="activities" ng-controller="ActivityController">
-    <div id="loading" ng-show="loading">
-      <span class="glyphicon glyphicon-refresh indicator"></span>
-    </div>
-    <div class="date-control">
-      <a class="btn prev-date" ng-click="addTargetDate(-1)">
-        &laquo; {{ targetDate - 24*60*60*1000 | date:'mediumDate' }}
-      </a>
-      <span class="current-date">{{ targetDate | date:'mediumDate' }}</span>
-      <a class="btn next-date" ng-click="addTargetDate(1)" ng-disabled="targetDate >= now">
-        {{ targetDate + 24*60*60*1000 | date:'mediumDate' }} &raquo;
-      </a>
-    </div>
-    <div class="activity-table-wrapper">
-      <table class="table table-hover table-striped activities"
-             ng-show="activities.length > 0">
-        <thead>
-          <tr>
-            <th class="check"></th>
-            <th class="title">Title</th>
-            <th class="duration">Duration</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="activity in activities">
-            <td colspan="3" class="group-set">
-              <table class="group">
-                <tbody>
-                  <tr class="page">
-                    <td class="check">
-                      <a href="#"
-                         ng-show="activity.children.length > 0"
-                         ng-click="activity.opening = !activity.opening">
-                        <span class="fa fa-minus-square-o" ng-show="activity.opening"></span>
-                        <span class="fa fa-plus-square-o" ng-show="!activity.opening"></span>
-                      </a>
-                    </td>
-                    <td class="title">
-                      <div class="title">
-                        <img class="site-icon" ng-src="{{ activity.site.iconUrl }}">
-                        <a href="{{ activity.url }}"
-                           title="{{ activity.title }}">{{ activity.title }}</a>
-                      </div>
-                    </td>
-                    <td class="duration">
-                      <div class="indicator-wrapper">
-                        <div style="width: {{ activity.totalDuration | secondIndicator }}%" class="indicator green">
-                          <div style="width: {{ activity.totalDuration | minuteIndicator }}%" class="indicator yellow">
-                            <div style="width: {{ activity.totalDuration | hourIndicator }}%" class="indicator red">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="value">
-                      {{ activity.totalDuration | formatDuration }}
-                      </div>
-                    </td>
-                  </tr>
-                  <tr class="page" ng-show="activity.opening" ng-repeat="cactivity in activity.children">
-                    <td class="check">
-                    </td>
-                    <td class="title">
-                      <div class="title">
-                        <img class="site-icon" ng-src="{{ cactivity.site.iconUrl }}">
-                        <a target="_blank" href="{{ cactivity.url }}"
-                           title="{{ cactivity.title }}">{{ cactivity.title }}</a>
-                      </div>
-                    </td>
-                    <td class="duration">
-                      <div class="indicator-wrapper">
-                        <div style="width: {{ cactivity.totalDuration | secondIndicator }}%" class="indicator green">
-                          <div style="width: {{ cactivity.totalDuration | minuteIndicator }}%" class="indicator yellow">
-                            <div style="width: {{ cactivity.totalDuration | hourIndicator }}%" class="indicator red">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="value">
-                      {{ cactivity.totalDuration | formatDuration }}
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="no-rows-message" ng-show="activities.length === 0">
-        No activity logs found for the date.
-      </div>
-    </div>
+<body id="root" ng-app="app.popup" ng-csp ng-controller="LoginController">
+  <div ng-include="'templates/header.html'"></div>
+  <div ng-show="isLoggedIn" ng-include="'templates/activities.html'"></div>
+  <div id="login-prompt" ng-show="!isLoggedIn">
+    <button class="btn btn-success" ng-click="login()">
+      <span class="fa fa-github"></span>
+      Login with GitHub
+    </button>
   </div>
 </div>
 </body>

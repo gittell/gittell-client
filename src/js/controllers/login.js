@@ -2,6 +2,7 @@
 var querystring = require('querystring');
 var config = require('../config');
 var AccessToken = require('../models/access-token');
+var User = require('../models/user');
 
 module.exports = ['$scope', function($scope) {
   $scope.accessToken = AccessToken.get();
@@ -15,6 +16,7 @@ module.exports = ['$scope', function($scope) {
       client_id: "chromeExtension",
       response_type: "token",
       redirect_uri: redirectUri,
+      reauthorize: true,
       state: state
     });
     var options = { interactive: interactive, url: authzUrl };
@@ -35,12 +37,25 @@ module.exports = ['$scope', function($scope) {
       $scope.accessToken = hashParams.access_token;
       $scope.isLoggedIn = true;
       AccessToken.set($scope.accessToken);
+      $scope.getLoginUser();
+    });
+  };
+  $scope.getLoginUser = function() {
+    console.log("getLoginUser");
+    User.getProfile(function(err, user) {
+      console.log(err, user);
+      $scope.loginUser = user;
       $scope.$apply();
     });
   };
   $scope.logout = function() {
-    AccessToken.set(null);
-    $scope.accessToken = null;
-    $scope.isLoggedIn = false;
+    chrome.identity.launchWebAuthFlow({ url: config.authzServerUrl + "/auth/logout" }, function() {
+      AccessToken.remove();
+      $scope.accessToken = null;
+      $scope.isLoggedIn = false;
+      $scope.loginUser = null;
+      $scope.$apply();
+    });
   };
+  $scope.getLoginUser();
 }];

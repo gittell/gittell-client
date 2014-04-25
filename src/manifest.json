@@ -1,7 +1,7 @@
 {
-  "name": "meetell",
+  "name": "gittell",
   "version": "0.0.1",
-  "description": "Broadcast what you are seeing in tech repository / questions",
+  "description": "Platform for logging and sharing research activities of developers",
   "manifest_version": 2,
   "icons": { "128": "images/icons/icon_128.png" },
   "browser_action": {
@@ -22,7 +22,9 @@
     "alarms",
     "identity",
     "http://localhost:5000/",
-    "https://meetell-server.herokuapp.com/"
+    "https://gittell-develop.herokuapp.com/",
+    "https://gittell-staging.herokuapp.com/",
+    "https://gittell.herokuapp.com/"
   ],
   "plugins": []
 }

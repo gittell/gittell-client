@@ -16,6 +16,16 @@ module.exports = function(grunt) {
 
     pkg: pkg,
 
+    target: 'develop',
+
+    buildDir: 'build',
+
+    tmpBuildDir: '<%= buildDir %>/__tmp__',
+
+    webBuildDir: '<%= buildDir %>/<%= target %>',
+
+    chromeBuildDir : '<%= buildDir %>/chrome-extension/<%= target %>',
+
     watch: {
       lib: {
         files: [ "src/**" ],
@@ -28,32 +38,51 @@ module.exports = function(grunt) {
     },
 
     copy: {
-      dist: {
+      js: {
         files: [{
           expand: true,
-          cwd: 'src/',
-          src: [ '**' ],
-          dest: 'build/'
-        }, {
-          expand: true,
-          cwd: 'assets/',
-          src: [
-            'vendor/angular*/**',
-            'vendor/font-awesome/**',
-            'vendor/bootstrap/dist/**'
-          ],
-          dest: 'build/assets'
+          cwd: 'src/js',
+          src: [ '**/*.js' ],
+          dest: '<%= tmpBuildDir %>/js'
         }]
+      },
+      statics: {
+        expand: true,
+        cwd: 'src/',
+        src: [ '**', '!**/*.js', '!**/*.less' ],
+        dest: '<%= tmpBuildDir %>'
+      },
+      assets: {
+        expand: true,
+        src: [ 'assets/vendor/**'],
+        dest: '<%= tmpBuildDir %>'
+      },
+      webapp: {
+        expand: true,
+        cwd: '<%= tmpBuildDir %>',
+        src: [ '**', '!js/**' ],
+        dest: '<%= webBuildDir %>'
+      },
+      chromeExtension: {
+        expand: true,
+        cwd: '<%= tmpBuildDir %>',
+        src: [ '**', '!js/**' ],
+        dest: '<%= chromeBuildDir %>'
       }
     },
 
     browserify: {
-      lib: {
+      webapp: {
         files: {
-          'build/js/background-main.js': [ 'build/js/background.js' ],
-          'build/js/popup-main.js': [ 'build/js/popup.js' ],
-          'build/js/options-main.js': [ 'build/js/options.js' ],
-          'build/js/observe-main.js': [ 'build/js/observe.js' ]
+          '<%= webBuildDir %>/js/main.js': [ '<%= tmpBuildDir %>/js/popup.js' ]
+        }
+      },
+      chromeExtension: {
+        files: {
+          '<%= chromeBuildDir %>/js/background-main.js': [ '<%= tmpBuildDir %>/js/background.js' ],
+          '<%= chromeBuildDir %>/js/popup-main.js': [ '<%= tmpBuildDir %>/js/popup.js' ],
+          '<%= chromeBuildDir %>/js/options-main.js': [ '<%= tmpBuildDir %>/js/options.js' ],
+          '<%= chromeBuildDir %>/js/observe-main.js': [ '<%= tmpBuildDir %>/js/observe.js' ]
         }
       },
       test: {
@@ -71,8 +100,8 @@ module.exports = function(grunt) {
           [
             'envify',
             {
-              API_SERVER_URL: 'https://meetell-server.herokuapp.com',
-              AUTHZ_SERVER_URL: 'https://meetell-server.herokuapp.com'
+              API_SERVER_URL: 'https://gittell<%= target ==="production" ? "" : "-" + target %>.herokuapp.com',
+              AUTHZ_SERVER_URL: 'https://gittell<%= target ==="production" ? "" : "-" + target %>.herokuapp.com'
             }
           ]
         ]
@@ -93,7 +122,7 @@ module.exports = function(grunt) {
     less: {
       dist: {
         files: {
-          "build/css/popup.css": [ "src/less/popup.less" ]
+          "<%= tmpBuildDir %>/css/popup.css": [ "src/less/popup.less" ]
         }
       }
     },
@@ -102,6 +131,9 @@ module.exports = function(grunt) {
       lib: {
         src: [ "build/*" ]
       },
+      tmp: {
+        src: [ "<%= tmpBuildDir %>/**" ]
+      },
       test: {
         src: [ "test/browser/**", "test-powered/**" ]
       }
@@ -109,8 +141,21 @@ module.exports = function(grunt) {
 
   });
 
+  grunt.registerTask('target:develop', function() {
+    grunt.config('target', 'develop');
+  });
+  grunt.registerTask('target:staging', function() {
+    grunt.config('target', 'staging');
+  });
+  grunt.registerTask('target:production', function() {
+    grunt.config('target', 'production');
+  });
   grunt.registerTask('test', [ 'browserify:test', 'espower' ]);
-  grunt.registerTask('build', [ 'copy', 'less', 'browserify:lib' ]);
+  grunt.registerTask('buildapp', [ 'less', 'copy', 'browserify' ]);
+  grunt.registerTask('build:develop', [ 'target:develop', 'buildapp' ]); //, 'clean:tmp' ]);
+  grunt.registerTask('build:staging', [ 'target:staging', 'buildapp' ]); //, 'clean:tmp' ]);
+  grunt.registerTask('build:production', [ 'target:production', 'buildapp' ]); //, 'clean:tmp' ]);
+  grunt.registerTask('build', [ 'build:develop' ]);
   grunt.registerTask('default', [ 'build' ]);
 
 };

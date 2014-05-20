@@ -60,13 +60,25 @@ module.exports = function(grunt) {
       webapp: {
         expand: true,
         cwd: '<%= tmpBuildDir %>',
-        src: [ '**', '!js/**' ],
+        src: [
+          'assets/**',
+          'images/**',
+          'css/**',
+          'templates/**'
+        ],
         dest: '<%= webBuildDir %>'
       },
       chromeExtension: {
         expand: true,
         cwd: '<%= tmpBuildDir %>',
-        src: [ '**', '!js/**' ],
+        src: [
+          'assets/**',
+          'images/**',
+          'css/**',
+          'templates/**',
+          '*.html',
+          'manifest.json'
+        ],
         dest: '<%= chromeBuildDir %>'
       }
     },

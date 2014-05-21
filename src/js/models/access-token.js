@@ -1,17 +1,22 @@
+var Q = require('q');
 var xhr = require('xhr');
 var config = require('../config');
 
 var atKeyName = 'meetell_access_token';
+var atDeferred = Q.defer();
+
 module.exports = {
   get: function() {
     return localStorage.getItem(atKeyName);
   },
   set: function(accessToken) {
     localStorage.setItem(atKeyName, accessToken);
+    atDeferred.resolve(accessToken);
   },
   remove: function() {
     var accessToken = this.get();
     localStorage.removeItem(atKeyName);
+    atDeferred = Q.defer();
     if (accessToken) {
       var noop = function() {};
       xhr({
@@ -25,5 +30,10 @@ module.exports = {
     return {
       Authorization: "Bearer "+this.get()
     };
+  },
+  waitAuthorize: function() {
+    var accessToken = this.get();
+    if (accessToken) { atDeferred.resolve(accessToken); }
+    return atDeferred.promise;
   }
 };

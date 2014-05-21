@@ -92,6 +92,10 @@ Site.find = function(params, callback) {
   }).then(function(sites) {
     setTimeout(function() { Site.resetCache(); }, 2*60*60*1000);
     return sites;
+  }).catch(function(err) {
+    console.error(err);
+    Site.resetCache();
+    throw err;
   });
   _sites.nodeify(callback);
 };

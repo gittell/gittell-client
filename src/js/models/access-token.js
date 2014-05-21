@@ -2,7 +2,7 @@ var Q = require('q');
 var xhr = require('xhr');
 var config = require('../config');
 
-var atKeyName = 'meetell_access_token';
+var atKeyName = 'gittell_access_token';
 var atDeferred = Q.defer();
 
 module.exports = {

@@ -72,7 +72,7 @@ Site.prototype = {
 var _sites;
 
 Site.find = function(params, callback) {
-  _sites = _sites || (function() {
+  _sites = _sites || AccessToken.waitAuthorize().then(function() {
     var deferred = Q.defer();
     xhr({
       method: 'GET',
@@ -89,8 +89,19 @@ Site.find = function(params, callback) {
       }
     });
     return deferred.promise;
-  })();
+  }).then(function(sites) {
+    setTimeout(function() { Site.resetCache(); }, 2*60*60*1000);
+    return sites;
+  }).catch(function(err) {
+    console.error(err);
+    Site.resetCache();
+    throw err;
+  });
   _sites.nodeify(callback);
+};
+
+Site.resetCache = function() {
+  _sites = null;
 };
 
 Site.findById = function(id, callback) {

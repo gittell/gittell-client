@@ -69,17 +69,28 @@ module.exports = function(grunt) {
         dest: '<%= webBuildDir %>'
       },
       chromeExtension: {
-        expand: true,
-        cwd: '<%= tmpBuildDir %>',
-        src: [
-          'assets/**',
-          'images/**',
-          'css/**',
-          'templates/**',
-          '*.html',
-          'manifest.json'
-        ],
-        dest: '<%= chromeBuildDir %>'
+        webapp: {
+          expand: true,
+          cwd: '<%= tmpBuildDir %>',
+          src: [
+            'assets/**',
+            'images/**',
+            'css/**',
+            'templates/**'
+          ],
+          dest: '<%= chromeBuildDir %>'
+        },
+        extension: {
+          expand: true,
+          cwd: '<%= tmpBuildDir %>/chrome-extension',
+          src: [
+            'manifest.json',
+            '*.html',
+            'css/**',
+            'images/**'
+          ],
+          dest: '<%= chromeBuildDir %>'
+        }
       }
     },
 
@@ -91,10 +102,10 @@ module.exports = function(grunt) {
       },
       chromeExtension: {
         files: {
-          '<%= chromeBuildDir %>/js/background-main.js': [ '<%= tmpBuildDir %>/js/background.js' ],
-          '<%= chromeBuildDir %>/js/popup-main.js': [ '<%= tmpBuildDir %>/js/popup.js' ],
-          '<%= chromeBuildDir %>/js/options-main.js': [ '<%= tmpBuildDir %>/js/options.js' ],
-          '<%= chromeBuildDir %>/js/observe-main.js': [ '<%= tmpBuildDir %>/js/observe.js' ]
+          '<%= chromeBuildDir %>/js/background-main.js': [ '<%= tmpBuildDir %>/chrome-extension/js/background.js' ],
+          '<%= chromeBuildDir %>/js/popup-main.js': [ '<%= tmpBuildDir %>/chrome-extension/js/popup.js' ],
+          '<%= chromeBuildDir %>/js/options-main.js': [ '<%= tmpBuildDir %>/chrome-extension/js/options.js' ],
+          '<%= chromeBuildDir %>/js/observe-main.js': [ '<%= tmpBuildDir %>/chrome-estension/js/observe.js' ]
         }
       },
       test: {

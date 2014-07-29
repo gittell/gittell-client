@@ -1,0 +1,26 @@
+@import "../common.less";
+@import "../layout.less";
+@import "../activities.less";
+
+html.popup #root {
+  width: 480px;
+  height: 400px;
+}
+
+#header {
+  .navbar-header {
+    float: left;
+    margin-right: 0;
+    margin-left: 0;
+  }
+  .navbar-nav {
+    float: left;
+    margin: 0;
+    &.navbar-right:last-child {
+      margin-right: -15px;
+    }
+  }
+  .navbar-right {
+    float: right !important;
+  }
+}

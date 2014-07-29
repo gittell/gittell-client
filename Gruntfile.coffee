@@ -16,7 +16,7 @@ module.exports = (grunt) ->
 
     webBuildDir: "<%= buildDir %>/<%= target %>"
 
-    chromeBuildDir: "<%= buildDir %>/chrome-extension/<%= target %>"
+    chromeBuildDir: "<%= buildDir %>/chrome/<%= target %>"
 
     watch:
       lib:
@@ -26,6 +26,16 @@ module.exports = (grunt) ->
       test:
         files: ["test/*.test.js"]
         tasks: ["test"]
+
+    less:
+      webapp:
+        files:
+          "<%= tmpBuildDir %>/css/main.css": ["src/less/main.less"]
+
+      chrome:
+        files:
+          "<%= tmpBuildDir %>/css/chrome/popup.css": ["src/less/chrome/popup.less"]
+          "<%= tmpBuildDir %>/css/chrome/options.css": ["src/less/chrome/options.less"]
 
     copy:
       js:
@@ -62,7 +72,7 @@ module.exports = (grunt) ->
         ]
         dest: "<%= webBuildDir %>"
 
-      chromeExtension:
+      chrome:
         files: [
           expand: true
           cwd: "<%= tmpBuildDir %>"
@@ -75,7 +85,7 @@ module.exports = (grunt) ->
           dest: "<%= chromeBuildDir %>"
         ,
           expand: true
-          cwd: "<%= tmpBuildDir %>/chrome-extension"
+          cwd: "<%= tmpBuildDir %>/chrome"
           src: [
             "manifest.json"
             "*.html"
@@ -88,14 +98,15 @@ module.exports = (grunt) ->
     browserify:
       webapp:
         files:
-          "<%= webBuildDir %>/js/main.js": ["<%= tmpBuildDir %>/js/popup.js"]
+          "<%= webBuildDir %>/js/main.js": ["<%= tmpBuildDir %>/js/main.js"]
+          "<%= webBuildDir %>/js/callback.js": ["<%= tmpBuildDir %>/js/callback.js"]
 
-      chromeExtension:
+      chrome:
         files:
-          "<%= chromeBuildDir %>/js/background-main.js": ["<%= tmpBuildDir %>/chrome-extension/js/background.js"]
-          "<%= chromeBuildDir %>/js/popup-main.js": ["<%= tmpBuildDir %>/chrome-extension/js/popup.js"]
-          "<%= chromeBuildDir %>/js/options-main.js": ["<%= tmpBuildDir %>/chrome-extension/js/options.js"]
-          "<%= chromeBuildDir %>/js/observe-main.js": ["<%= tmpBuildDir %>/chrome-estension/js/observe.js"]
+          "<%= chromeBuildDir %>/js/chrome/background.js": ["<%= tmpBuildDir %>/js/chrome/background.js"]
+          "<%= chromeBuildDir %>/js/chrome/popup.js": ["<%= tmpBuildDir %>/js/chrome/popup.js"]
+          "<%= chromeBuildDir %>/js/chrome/options.js": ["<%= tmpBuildDir %>/js/chrome/options.js"]
+          "<%= chromeBuildDir %>/js/chrome/observe.js": ["<%= tmpBuildDir %>/js/chrome/observe.js"]
 
       test:
         files: [
@@ -112,8 +123,10 @@ module.exports = (grunt) ->
         transform: [[
           "envify"
           {
-            API_SERVER_URL: "https://gittell<%= target ==='production' ? '' : '' + target %>.herokuapp.com"
-            AUTHZ_SERVER_URL: "https://gittell<%= target ==='production' ? '' : '' + target %>.herokuapp.com"
+            API_SERVER_URL:
+              "<%= target === 'local' ? 'http://localhost:5000' : 'https://gittell' + (target ==='production' ? '' : '-' + target ) + '.herokuapp.com' %>"
+            AUTHZ_SERVER_URL:
+              "<%= target === 'local' ? 'http://localhost:5000' : 'https://gittell' + (target ==='production' ? '' : '-' + target ) + '.herokuapp.com' %>"
           }
         ]]
 
@@ -126,14 +139,15 @@ module.exports = (grunt) ->
           dest: "test-powered/"
         ]
 
-    less:
-      dist:
-        files:
-          "<%= tmpBuildDir %>/css/popup.css": ["src/less/popup.less"]
-
     clean:
-      lib:
-        src: ["build/*"]
+      all:
+        src: [ "build/*" ]
+
+      webapp:
+        src: [ "build/<%= target %>" ]
+
+      chrome:
+        src: [ "build/chrome/<%= target %>" ]
 
       tmp:
         src: ["<%= tmpBuildDir %>/**"]
@@ -144,36 +158,17 @@ module.exports = (grunt) ->
           "test-powered/**"
         ]
 
-  grunt.registerTask "target:develop", ->
-    grunt.config "target", "develop"
+  grunt.registerTask "target:local", -> grunt.config "target", "local"
+  grunt.registerTask "target:develop", -> grunt.config "target", "develop"
+  grunt.registerTask "target:staging", -> grunt.config "target", "staging"
+  grunt.registerTask "target:production", -> grunt.config "target", "production"
 
-  grunt.registerTask "target:staging", ->
-    grunt.config "target", "staging"
-
-  grunt.registerTask "target:production", ->
-    grunt.config "target", "production"
-
-  grunt.registerTask "test", [
-    "browserify:test"
-    "espower"
-  ]
-  grunt.registerTask "buildapp", [
-    "less"
-    "copy"
-    "browserify"
-  ]
-  grunt.registerTask "build:develop", [ #, 'clean:tmp' ]);
-    "target:develop"
-    "buildapp"
-  ]
-  grunt.registerTask "build:staging", [ #, 'clean:tmp' ]);
-    "target:staging"
-    "buildapp"
-  ]
-  grunt.registerTask "build:production", [ #, 'clean:tmp' ]);
-    "target:production"
-    "buildapp"
-  ]
-  grunt.registerTask "build", ["build:develop"]
+  grunt.registerTask "test", [ "browserify:test", "espower" ]
+  grunt.registerTask "buildapp", [ "cleanbuild", "less", "copy", "browserify" ]
+  grunt.registerTask "cleanbuild", [ "clean:chrome", "clean:webapp" ]
+  grunt.registerTask "build:local", [ "target:local", "buildapp" ]
+  grunt.registerTask "build:develop", [ "target:develop", "buildapp" ]
+  grunt.registerTask "build:staging", [ "target:staging", "buildapp" ]
+  grunt.registerTask "build:production", [ "target:production", "buildapp" ]
+  grunt.registerTask "build", ["build:local"]
   grunt.registerTask "default", ["build"]
-  return

@@ -2,8 +2,8 @@
 var _ = require('underscore');
 var Q = require('q');
 
-var Activity = require('./models/activity');
-var Site = require('./models/site');
+var Activity = require('../models/activity');
+var Site = require('../models/site');
 
 var MIN_STAY_THRESHOLD = 5000;
 var ACTIVE_THRESHOLD = 30000;

@@ -10,11 +10,11 @@
   },
   "background": {
     "persistent": false,
-    "scripts": [ "js/background-main.js" ]
+    "scripts": [ "js/chrome/background.js" ]
   },
   "content_scripts": [{
     "matches": [ "http://*/*", "https://*/*" ],
-    "js": [ "js/observe-main.js" ]
+    "js": [ "js/chrome/observe.js" ]
   }],
   "options_page": "options.html",
   "permissions": [

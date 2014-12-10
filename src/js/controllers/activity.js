@@ -3,9 +3,17 @@ var _ = require('underscore');
 
 module.exports = [ "$scope", function($scope) {
   $scope.addTargetDate = function(diff) {
-    $scope.targetDate += diff * 24 * 60 * 60 * 1000;
-    $scope.fetchActivities();
+    var dt = $scope.targetDateInMsec + diff * 24 * 60 * 60 * 1000;
+    $scope.targetDate = new Date(dt);
   };
+  $scope.resetTargetDate = function() {
+    $scope.targetDate = new Date();
+  };
+  $scope.$watch("targetDate", function() {
+    if (!$scope.targetDate) { return; }
+    $scope.targetDateInMsec = $scope.targetDate.getTime();
+    $scope.fetchActivities();
+  });
   $scope.fetchActivities = function() {
     Activity.listSummary({ date: $scope.targetDate }, 'totalDuration', function(err, activities) {
       $scope.loading = false;
@@ -15,7 +23,9 @@ module.exports = [ "$scope", function($scope) {
     });
     $scope.loading = true;
   };
-  $scope.targetDate = $scope.now = Date.now();
+  var today = new Date();
+  $scope.now = today.getTime();
+  $scope.targetDate = $scope.today = today;
   $scope.fetchActivities();
 }];
 

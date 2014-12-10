@@ -21,6 +21,10 @@ function getToday() {
 }
 
 function toISO8601Date(d) {
+  if (typeof d === 'string') {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) { return d; }
+    else { d = new Date(d); }
+  }
   if (typeof d === 'number') { d = new Date(d); }
   return "" + d.getFullYear() + zeropad(d.getMonth() + 1) + zeropad(d.getDate());
 }

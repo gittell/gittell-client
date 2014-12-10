@@ -2,14 +2,23 @@
   <div id="loading" ng-show="loading">
     <span class="glyphicon glyphicon-refresh indicator"></span>
   </div>
-  <div class="date-control">
-    <a class="btn prev-date" ng-click="addTargetDate(-1)">
-      &laquo; {{ targetDate - 24*60*60*1000 | date:'mediumDate' }}
-    </a>
-    <span class="current-date">{{ targetDate | date:'mediumDate' }}</span>
-    <a class="btn next-date" ng-click="addTargetDate(1)" ng-disabled="targetDate >= now">
-      {{ targetDate + 24*60*60*1000 | date:'mediumDate' }} &raquo;
-    </a>
+  <div class="date-control container">
+    <div class="row">
+      <div class="col-xs-3">
+        <a class="btn prev-date" ng-click="addTargetDate(-1)">
+        &laquo; {{ targetDateInMsec - 24*60*60*1000 | date:'MMM d' }}
+        </a>
+      </div>
+      <div class="col-xs-6">
+        <input type="text" class="form-control" datepicker-popup="mediumDate" ng-model="targetDate" show-weeks="false" 
+               show-button-bar="false" max-date="today" />
+      </div>
+      <div class="col-xs-3">
+        <a class="btn next-date" ng-click="addTargetDate(1)" ng-disabled="targetDateInMsec >= now">
+        {{ targetDateInMsec + 24*60*60*1000 | date:'MMM d' }} &raquo;
+        </a>
+      </div>
+    </div>
   </div>
   <div class="activity-table-wrapper">
     <table class="table table-hover table-striped activities"
